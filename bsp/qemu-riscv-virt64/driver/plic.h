@@ -18,7 +18,7 @@
  *
  */
 
-#define VIRT_PLIC_BASE 0x0c000000L
+#define VIRT_PLIC_BASE 0x3c000000L
 
 #define PLIC_PRIORITY_OFFSET                (0x0)
 #define PLIC_PENDING_OFFSET                 (0x1000)
