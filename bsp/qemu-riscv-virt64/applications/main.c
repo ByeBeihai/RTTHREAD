@@ -15,7 +15,7 @@
 
 int main(void)
 {
-    rt_kprintf("Hello RISC-V!\n");
-
+    rt_kprintf("Hello,World!\n");
+    rt_kprintf("Polaris 22A:RISC-V Multicore Parallel Neuromorphic Processor!\n");
     return 0;
 }

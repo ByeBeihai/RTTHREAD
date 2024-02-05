@@ -31,8 +31,9 @@ static int       drv_uart_getc(struct rt_serial_device *serial);
 void virt_uart_init(void)
 {
     //http://byterunner.com/16550.html
-    uart_write_reg(IER, 0x00);
+    uart_write_reg(0xc, 0x03);
 
+    /*
     uint8_t lcr = uart_read_reg(LCR);
     uart_write_reg(LCR, lcr | (1 << 7));
     uart_write_reg(DLL, 0x01);
@@ -41,11 +42,10 @@ void virt_uart_init(void)
     lcr = 0;
     uart_write_reg(LCR, lcr | (3 << 0));
 
-    /*
      * enable receive interrupts.
      */
-    uint8_t ier = uart_read_reg(IER);
-    uart_write_reg(IER, ier | (1 << 0));
+    //uint8_t ier = uart_read_reg(IER);
+    //uart_write_reg(IER, ier | (1 << 0));
 }
 
 /*
@@ -85,13 +85,15 @@ static rt_err_t uart_control(struct rt_serial_device *serial, int cmd, void *arg
 
 static int drv_uart_putc(struct rt_serial_device *serial, char c)
 {
-    while ((uart_read_reg(LSR) & LSR_TX_IDLE) == 0);
-    return uart_write_reg(THR, c);
+    if(c == '\n')drv_uart_putc(serial,'\r');
+
+    while ((uart_read_reg(0x8) & 0x8));
+    return uart_write_reg(0x4, c);
 }
 
 static int drv_uart_getc(struct rt_serial_device *serial)
 {
-    if (uart_read_reg(LSR) & LSR_RX_READY){
+    if (uart_read_reg(0x8) & 0x1){
         return uart_read_reg(RHR);
     } else {
         return -1;
